@@ -7,6 +7,8 @@ import { Label } from "@/components/ui/label";
 import { Upload as UploadIcon, FileText, Image, RefreshCw, Database, Loader2 } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
+import { useWeb3 } from "@/hooks/useWeb3";
+
 
 const Upload = () => {
   const [content, setContent] = useState("");
@@ -19,6 +21,8 @@ const Upload = () => {
     vectorCount: 0,
     lastUpdated: null
   });
+  const { account, isConnected } = useWeb3();
+
 
   // 重新加载知识库
   const handleReloadVectorStore = async () => {
@@ -88,6 +92,8 @@ const Upload = () => {
   });
 
   const handleUpload = async () => {
+
+
     if (!content || !title) {
       toast.error("请填写标题和内容");
       return;
@@ -97,6 +103,7 @@ const Upload = () => {
     
     try {
       const formData = new FormData();
+      formData.append('wallet_address', account); 
       formData.append('filename', title);
       formData.append('content', content);
       formData.append('authorize_rag', authorizeRag.toString());
